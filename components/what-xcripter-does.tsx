@@ -4,15 +4,15 @@ import { useState } from "react"
 import { Search, FileText, Globe, TrendingUp, Zap, Users } from "lucide-react"
 
 const features = [
-  {
-    icon: Search,
-    title: "Research Trending Topics",
-    description: "AI analyzes trending topics and keywords in your niche automatically",
-    gradient: "from-blue-500 to-cyan-500",
-    mockupTitle: "AI Topic Research in Progress",
-    mockupContent: "Analyzing trending keywords in 'AI automation' niche. Found 24/7 high-volume keywords with low competition.",
-    mockupSubtext: "Discovering content opportunities that your competitors are missing.",
-  },
+  // {
+  //   icon: Search,
+  //   title: "Research Trending Topics",
+  //   description: "AI analyzes trending topics and keywords in your niche automatically",
+  //   gradient: "from-blue-500 to-cyan-500",
+  //   mockupTitle: "AI Topic Research in Progress",
+  //   mockupContent: "Analyzing trending keywords in 'AI automation' niche. Found 24/7 high-volume keywords with low competition.",
+  //   mockupSubtext: "Discovering content opportunities that your competitors are missing.",
+  // },
   {
     icon: FileText,
     title: "Create SEO-Optimized Articles",
