@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Zap, FileText, Globe, Play, Sparkles, Bot, Search, Upload } from "lucide-react"
 
@@ -59,17 +59,45 @@ export function Hero() {
 
   const [currentStep, setCurrentStep] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const workflowRef = useRef<HTMLDivElement>(null)
 
+  // Scroll-based step selection
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIsAnimating(true)
-      setTimeout(() => {
-        setCurrentStep((prev) => (prev + 1) % workflowSteps.length)
-        setIsAnimating(false)
-      }, 300)
-    }, 3000)
-    return () => clearInterval(interval)
-  }, [])
+    const handleScroll = () => {
+      if (!workflowRef.current) return
+
+      const section = workflowRef.current
+      const rect = section.getBoundingClientRect()
+      const sectionHeight = rect.height
+      const sectionTop = rect.top
+      const windowHeight = window.innerHeight
+
+      // Check if section is in viewport
+      if (sectionTop <= windowHeight && sectionTop + sectionHeight >= 0) {
+        // Calculate scroll progress within the section (0 to 1)
+        const progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (windowHeight + sectionHeight * 0.5)))
+        setScrollProgress(progress)
+        
+        // Map scroll progress to step index
+        const stepIndex = Math.floor(progress * workflowSteps.length)
+        const clampedIndex = Math.max(0, Math.min(workflowSteps.length - 1, stepIndex))
+        
+        if (clampedIndex !== currentStep) {
+          setIsAnimating(true)
+          setTimeout(() => {
+            setCurrentStep(clampedIndex)
+            setIsAnimating(false)
+          }, 200)
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // Initial call
+
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [currentStep])
 
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pt-16">
@@ -159,7 +187,7 @@ export function Hero() {
           </div>
 
           {/* Right side - Interactive workflow visualization */}
-          <div className="relative animate-fade-in-right mb-12 lg:mb-0">
+          <div ref={workflowRef} className="relative animate-fade-in-right mb-12 lg:mb-0">
             {/* Main workflow container */}
             <div className="relative p-8">
               {/* Background glow */}
@@ -179,6 +207,10 @@ export function Hero() {
                       }
                       ${isAnimating && currentStep === index ? "animate-pulse" : ""}
                     `}
+                    style={{
+                      transform: `translateY(${currentStep === index ? 0 : (index - currentStep) * 10}px) scale(${currentStep === index ? 1.05 : 1})`,
+                      opacity: currentStep === index ? 1 : 0.7 + (Math.max(0, 1 - Math.abs(index - currentStep) * 0.3))
+                    }}
                   >
                     {/* Step icon */}
                     <div
@@ -243,14 +275,14 @@ export function Hero() {
             </div>
 
             {/* Stats overlay - Touch bottom of Auto Post card */}
-            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-4 lg:space-x-8 text-center">
+            <div className="absolute -bottom-10 sm:-bottom-12 md:-bottom-14 left-1/2 transform -translate-x-1/2 flex space-x-4 lg:space-x-8 text-center mt-8">
               <div className="px-3 py-2 lg:px-4 lg:py-2 rounded-xl bg-gray-900/80 border border-gray-700/50 backdrop-blur-sm hover:scale-105 transition-transform">
                 <div className="text-base lg:text-lg font-bold text-white">50K+</div>
-                <div className="text-xs text-gray-400 py-2">Articles</div>
+                <div className="text-xs text-gray-400">Articles</div>
               </div>
               <div className="px-3 py-2 lg:px-4 lg:py-2 rounded-xl bg-gray-900/80 border border-gray-700/50 backdrop-blur-sm hover:scale-105 transition-transform">
                 <div className="text-base lg:text-lg font-bold text-white">99%</div>
-                <div className="text-xs text-gray-400 py-2">SEO Score</div>
+                <div className="text-xs text-gray-400">SEO Score</div>
               </div>
             </div>
           </div>

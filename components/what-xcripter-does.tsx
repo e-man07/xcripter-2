@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Search, FileText, Globe, TrendingUp, Zap, Users } from "lucide-react"
 
 const features = [
@@ -62,14 +62,84 @@ const features = [
 
 export function WhatXcripterDoes() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [activeFeature, setActiveFeature] = useState<number>(0)
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const sectionRef = useRef<HTMLElement>(null)
+  const featureRefs = useRef<(HTMLDivElement | null)[]>([])
+
+  // Initialize feature refs array
+  useEffect(() => {
+    featureRefs.current = featureRefs.current.slice(0, features.length)
+  }, [features.length])
+
+  // Scroll detection for parallax effects
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return
+
+      const section = sectionRef.current
+      const rect = section.getBoundingClientRect()
+      const sectionHeight = rect.height
+      const sectionTop = rect.top
+      const windowHeight = window.innerHeight
+
+      // Check if section is in viewport
+      if (sectionTop <= windowHeight && sectionTop + sectionHeight >= 0) {
+        // Calculate scroll progress within the section (0 to 1)
+        const progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (windowHeight + sectionHeight)))
+        setScrollProgress(progress)
+        
+        // Find which feature is most visible
+        let mostVisibleFeature = 0
+        let maxVisibility = 0
+        
+        featureRefs.current.forEach((ref, index) => {
+          if (!ref) return
+          
+          const rect = ref.getBoundingClientRect()
+          const visibility = calculateVisibility(rect, windowHeight)
+          
+          if (visibility > maxVisibility) {
+            maxVisibility = visibility
+            mostVisibleFeature = index
+          }
+        })
+        
+        if (mostVisibleFeature !== activeFeature) {
+          setActiveFeature(mostVisibleFeature)
+        }
+      }
+    }
+
+    // Calculate how much of an element is visible in the viewport (0-1)
+    const calculateVisibility = (rect: DOMRect, windowHeight: number) => {
+      const elementHeight = rect.height
+      const visibleTop = Math.max(0, rect.top)
+      const visibleBottom = Math.min(windowHeight, rect.bottom)
+      const visibleHeight = Math.max(0, visibleBottom - visibleTop)
+      return visibleHeight / elementHeight
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // Initial call
+
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [activeFeature])
 
   return (
-    <section className="py-24 px-4 relative overflow-hidden" id="features">
+    <section ref={sectionRef} className="py-24 px-4 relative overflow-hidden min-h-screen" id="features">
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-900/5 to-transparent" />
 
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-20">
+        <div className="text-center mb-10">
+          {/* Scroll Progress Indicator */}
+          <div className="w-64 h-2 bg-gray-800 rounded-full mx-auto mb-10">
+            <div 
+              className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full transition-all duration-300 ease-out"
+              style={{ width: `${scrollProgress * 100}%` }}
+            />
+          </div>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             What Can Xcripter Do?
           </h2>
@@ -83,10 +153,16 @@ export function WhatXcripterDoes() {
           {features.map((feature, index) => (
             <div
               key={index}
+              ref={(el) => { featureRefs.current[index] = el }}
               className={`
                 flex flex-col lg:flex-row items-center gap-12
                 ${index % 2 === 1 ? "lg:flex-row-reverse" : ""}
               `}
+              style={{
+                transform: `translateY(${activeFeature === index ? 0 : 20}px)`,
+                opacity: activeFeature === index || hoveredIndex === index ? 1 : 0.7,
+                transition: 'all 0.7s ease-out'
+              }}
             >
               {/* Content side */}
               <div className="flex-1 space-y-6">
@@ -94,7 +170,7 @@ export function WhatXcripterDoes() {
                   className={`
                     inline-flex w-20 h-20 rounded-2xl items-center justify-center
                     bg-gradient-to-br ${feature.gradient} shadow-2xl
-                    ${hoveredIndex === index ? "scale-110 shadow-3xl" : ""}
+                    ${hoveredIndex === index || activeFeature === index ? "scale-110 shadow-3xl" : ""}
                     transition-all duration-500
                   `}
                   onMouseEnter={() => setHoveredIndex(index)}
@@ -130,9 +206,13 @@ export function WhatXcripterDoes() {
                   className={`
                     relative p-8 rounded-3xl bg-gradient-to-br from-gray-900/60 to-gray-800/40 
                     border border-gray-700/50 backdrop-blur-sm
-                    ${hoveredIndex === index ? "border-gray-600/70 scale-105" : ""}
+                    ${hoveredIndex === index || activeFeature === index ? "border-gray-600/70 scale-105" : ""}
                     transition-all duration-500 group
                   `}
+                  style={{
+                    transform: `translateX(${(activeFeature === index ? (index % 2 === 0 ? 10 : -10) : 0)}px)`,
+                    transition: 'all 0.5s ease-out'
+                  }}
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
@@ -148,7 +228,7 @@ export function WhatXcripterDoes() {
                   <div className="space-y-6">
                     {/* Header */}
                     <div className="flex items-center space-x-3">
-                      <div className={`w-4 h-4 rounded-full bg-gradient-to-r ${feature.gradient} animate-pulse`} />
+                      <div className={`w-4 h-4 rounded-full bg-gradient-to-r ${feature.gradient} ${activeFeature === index ? 'animate-pulse' : ''}`} />
                       <div className="text-white font-semibold">
                         {feature.title.split(" ")[0]} {feature.title.split(" ")[1]}
                       </div>
