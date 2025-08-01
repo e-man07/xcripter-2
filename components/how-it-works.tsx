@@ -1,8 +1,7 @@
 "use client"
 
 import React from "react"
-
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { CreditCard, Bot, Search, Globe } from "lucide-react"
 
 const steps = [
@@ -42,16 +41,41 @@ const steps = [
 
 export function HowItWorks() {
   const [activeStep, setActiveStep] = useState(0)
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveStep((prev) => (prev + 1) % steps.length)
-    }, 4000)
-    return () => clearInterval(interval)
+    const handleScroll = () => {
+      if (!sectionRef.current) return
+
+      const section = sectionRef.current
+      const rect = section.getBoundingClientRect()
+      const sectionHeight = rect.height
+      const sectionTop = rect.top
+      const windowHeight = window.innerHeight
+
+      // Check if section is in viewport
+      if (sectionTop <= windowHeight && sectionTop + sectionHeight >= 0) {
+        // Calculate scroll progress within the section (0 to 1)
+        const progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (windowHeight + sectionHeight)))
+        setScrollProgress(progress)
+        
+        // Map scroll progress to step index
+        const stepIndex = Math.floor(progress * steps.length)
+        const clampedIndex = Math.max(0, Math.min(steps.length - 1, stepIndex))
+        
+        setActiveStep(clampedIndex)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // Initial call
+
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
-    <section className="py-24 px-4 relative">
+    <section ref={sectionRef} className="py-24 px-4 relative min-h-screen">
       {/* Background pattern */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-900/20 to-transparent" />
 
@@ -60,28 +84,46 @@ export function HowItWorks() {
           <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             How Xcripter Works
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
             From subscription to publication, streamline your entire content workflow in four simple steps
           </p>
+          
+          {/* Scroll Progress Indicator */}
+          <div className="w-64 h-2 bg-gray-800 rounded-full mx-auto mb-4">
+            <div 
+              className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full transition-all duration-300 ease-out"
+              style={{ width: `${scrollProgress * 100}%` }}
+            />
+          </div>
+          <p className="text-sm text-gray-500">Scroll to explore each step</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Steps navigation */}
           <div className="space-y-6">
-            {steps.map((step, index) => (
-              <div
-                key={index}
-                className={`
-                  relative p-6 rounded-2xl cursor-pointer transition-all duration-500 transform
-                  ${
-                    activeStep === index
-                      ? "bg-gradient-to-r from-gray-800/80 to-gray-700/80 border-l-4 scale-105"
-                      : "bg-gray-900/30 hover:bg-gray-800/50"
-                  }
-                  border border-gray-700/50 backdrop-blur-sm
-                `}
-                onClick={() => setActiveStep(index)}
-              >
+            {steps.map((step, index) => {
+              const isActive = activeStep === index
+              const stepProgress = Math.max(0, Math.min(1, (scrollProgress * steps.length) - index))
+              const translateY = isActive ? 0 : (index - activeStep) * 10
+              
+              return (
+                <div
+                  key={index}
+                  className={`
+                    relative p-6 rounded-2xl cursor-pointer transition-all duration-500 transform
+                    ${
+                      isActive
+                        ? "bg-gradient-to-r from-gray-800/80 to-gray-700/80 border-l-4 scale-105"
+                        : "bg-gray-900/30 hover:bg-gray-800/50"
+                    }
+                    border border-gray-700/50 backdrop-blur-sm
+                  `}
+                  style={{
+                    transform: `translateY(${translateY}px) scale(${isActive ? 1.05 : 1})`,
+                    opacity: isActive ? 1 : 0.7 + (stepProgress * 0.3)
+                  }}
+                  onClick={() => setActiveStep(index)}
+                >
                 <div
                   className={`
                   absolute left-0 top-0 bottom-0 w-1 rounded-r-full transition-all duration-500
@@ -120,13 +162,20 @@ export function HowItWorks() {
                     {index + 1}
                   </div>
                 </div>
-              </div>
-            ))}
+                </div>
+              )
+            })}
           </div>
 
           {/* Active step details */}
           <div className="relative">
-            <div className="p-8 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-800/60 border border-gray-700/50 backdrop-blur-sm">
+            <div 
+              className="p-8 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-800/60 border border-gray-700/50 backdrop-blur-sm transition-all duration-500"
+              style={{
+                transform: `translateX(${scrollProgress * 20 - 10}px)`,
+                opacity: 0.8 + (scrollProgress * 0.2)
+              }}
+            >
               <div
                 className={`
                 w-20 h-20 rounded-2xl mb-6 flex items-center justify-center

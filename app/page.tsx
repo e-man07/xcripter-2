@@ -8,6 +8,7 @@ import { Pricing } from "@/components/pricing"
 import { LiveDemo } from "@/components/live-demo"
 import { Testimonials } from "@/components/testimonials"
 import { FAQ } from "@/components/faq"
+import { Contact } from "@/components/contact"
 import { CTA } from "@/components/cta"
 import { Footer } from "@/components/footer"
 
@@ -24,6 +25,7 @@ export default function Home() {
       <LiveDemo />
       <Testimonials />
       <FAQ />
+      <Contact />
       <CTA />
       <Footer />
     </main>

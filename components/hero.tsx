@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Zap, FileText, Globe, Play, Sparkles } from "lucide-react"
+import { ArrowRight, Zap, FileText, Globe, Play, Sparkles, Bot, Search, Upload } from "lucide-react"
 
 export function Hero() {
   const [displayText, setDisplayText] = useState("")
@@ -38,19 +38,19 @@ export function Hero() {
 
   const workflowSteps = [
     {
-      icon: "🤖",
+      icon: Bot,
       label: "AI Generate",
       color: "from-blue-500 to-cyan-500",
       description: "Create quality content",
     },
     {
-      icon: "🔍",
+      icon: Search,
       label: "SEO Optimize",
       color: "from-indigo-500 to-blue-500",
       description: "Boost search rankings",
     },
     {
-      icon: "📝",
+      icon: Upload,
       label: "Auto Post",
       color: "from-cyan-500 to-teal-500",
       description: "Publish to WordPress",
@@ -191,7 +191,7 @@ export function Hero() {
                         }
                       `}
                     >
-                      {step.icon}
+                      <step.icon className="w-8 h-8 text-white" />
                       {currentStep === index && (
                         <>
                           <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/20 to-transparent animate-spin-slow" />
@@ -246,11 +246,11 @@ export function Hero() {
             <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-4 lg:space-x-8 text-center">
               <div className="px-3 py-2 lg:px-4 lg:py-2 rounded-xl bg-gray-900/80 border border-gray-700/50 backdrop-blur-sm hover:scale-105 transition-transform">
                 <div className="text-base lg:text-lg font-bold text-white">50K+</div>
-                <div className="text-xs text-gray-400">Articles</div>
+                <div className="text-xs text-gray-400 py-2">Articles</div>
               </div>
               <div className="px-3 py-2 lg:px-4 lg:py-2 rounded-xl bg-gray-900/80 border border-gray-700/50 backdrop-blur-sm hover:scale-105 transition-transform">
                 <div className="text-base lg:text-lg font-bold text-white">99%</div>
-                <div className="text-xs text-gray-400">SEO Score</div>
+                <div className="text-xs text-gray-400 py-2">SEO Score</div>
               </div>
             </div>
           </div>

@@ -10,7 +10,7 @@ export function Footer() {
             <div className="flex items-center space-x-3 mb-4 h-20">
               <a href="/" className="h-20 flex items-center">
                 <img
-                  src="/xcripter1.png"
+                  src="/xcripter2.png"
                   alt="Xcripter Logo"
                   className="h-full w-auto object-contain"
                 />

@@ -120,15 +120,6 @@ export function Pricing() {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-900/5 to-transparent" />
 
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            Simple, Scalable Pricing
-          </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Choose the plan that fits your content needs. Scale up as you grow.
-          </p>
-        </div>
-
         {/* Animated stats with intersection observer */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <div className="text-center p-8 rounded-3xl bg-gradient-to-br from-gray-900/60 to-gray-800/40 border border-gray-700/50 backdrop-blur-sm hover:border-gray-600/70 hover:scale-105 transition-all duration-500 group">
@@ -166,6 +157,16 @@ export function Pricing() {
               />
             </div>
           </div>
+        </div>
+        
+        <div className="relative text-center mb-16">
+          <div className="absolute left-1/2 -top-8 w-20 h-1 bg-gradient-to-r from-blue-500 to-cyan-500 transform -translate-x-1/2 rounded-full"></div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            Simple, Scalable Pricing
+          </h2>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            Choose the plan that fits your content needs. Scale up as you grow.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
