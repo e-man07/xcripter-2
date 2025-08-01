@@ -96,7 +96,7 @@ export function Features() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-24 px-4 relative min-h-screen">
+    <section ref={sectionRef} className="py-24 px-6 sm:px-8 md:px-10 relative min-h-screen">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">

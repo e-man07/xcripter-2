@@ -211,16 +211,16 @@ export function WhatXcripterDoes() {
               </div>
 
               {/* Visual side */}
-              <div className="lg:w-1/2 relative">
+              <div className="lg:w-1/2 relative p-6">
                 <div
                   className={`
                     relative p-8 rounded-3xl bg-gradient-to-br from-gray-900/60 to-gray-800/40 
                     border border-gray-700/50 backdrop-blur-sm
-                    ${hoveredIndex === index || activeFeature === index ? "border-gray-600/70 scale-105" : ""}
+                    ${hoveredIndex === index || activeFeature === index ? "border-gray-600/70" : ""}
                     transition-all duration-500 group
                   `}
                   style={{
-                    transform: `translateX(${(activeFeature === index ? (index % 2 === 0 ? 20 : -20) : 0)}px) translateY(${activeFeature === index ? -10 : 0}px)`,
+                    transform: `${hoveredIndex === index || activeFeature === index ? "scale(1.05)" : "scale(1)"} translateY(${activeFeature === index ? -5 : 0}px)`,
                     transition: 'all 0.7s ease-out',
                     boxShadow: activeFeature === index ? '0 20px 40px -20px rgba(0, 0, 0, 0.5)' : 'none'
                   }}
@@ -287,14 +287,14 @@ export function WhatXcripterDoes() {
                   </div>
 
                   {/* Floating icon */}
-                  <div className="absolute -top-4 -right-4 w-12 h-12 rounded-xl bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <div className="absolute top-0 right-0 w-12 h-12 rounded-xl bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                     <feature.icon className="w-6 h-6 text-blue-400" />
                   </div>
                 </div>
 
                 {/* Decorative floating elements */}
-                <div className="absolute -z-10 top-1/4 -left-4 w-24 h-24 bg-blue-500/5 rounded-full blur-xl animate-pulse" />
-                <div className="absolute -z-10 bottom-1/4 -right-4 w-32 h-32 bg-cyan-500/5 rounded-full blur-xl animate-pulse delay-1000" />
+                <div className="absolute -z-10 top-1/4 left-0 w-24 h-24 bg-blue-500/5 rounded-full blur-xl animate-pulse" />
+                <div className="absolute -z-10 bottom-1/4 right-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-xl animate-pulse delay-1000" />
               </div>
             </div>
           ))}

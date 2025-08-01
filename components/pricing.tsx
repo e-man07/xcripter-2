@@ -115,7 +115,7 @@ export function Pricing() {
   }, [])
 
   return (
-    <section className="py-24 px-4 relative overflow-hidden" id="pricing" ref={sectionRef}>
+    <section className="py-24 px-6 sm:px-8 md:px-10 relative overflow-hidden" id="pricing" ref={sectionRef}>
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-900/5 to-transparent" />
 

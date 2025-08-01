@@ -1,40 +1,50 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import { ArrowRight, Zap, FileText, Globe, Play, Sparkles, Bot, Search, Upload } from "lucide-react"
+import { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowRight,
+  Zap,
+  FileText,
+  Globe,
+  Play,
+  Sparkles,
+  Bot,
+  Search,
+  Upload,
+} from "lucide-react";
 
 export function Hero() {
-  const [displayText, setDisplayText] = useState("")
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [isDeleting, setIsDeleting] = useState(false)
-  const [showArrow, setShowArrow] = useState(false)
-  const fullText = "Xcripter"
+  const [displayText, setDisplayText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showArrow, setShowArrow] = useState(false);
+  const fullText = "Xcripter";
 
   useEffect(() => {
-    const typeSpeed = isDeleting ? 150 : 300
-    const pauseTime = isDeleting ? 1500 : 3000
+    const typeSpeed = isDeleting ? 150 : 300;
+    const pauseTime = isDeleting ? 1500 : 3000;
 
     const timeout = setTimeout(() => {
       if (!isDeleting && currentIndex < fullText.length) {
-        setDisplayText((prev) => prev + fullText[currentIndex])
-        setCurrentIndex((prev) => prev + 1)
+        setDisplayText((prev) => prev + fullText[currentIndex]);
+        setCurrentIndex((prev) => prev + 1);
       } else if (!isDeleting && currentIndex === fullText.length) {
-        setShowArrow(true)
+        setShowArrow(true);
         setTimeout(() => {
-          setShowArrow(false)
-          setIsDeleting(true)
-        }, pauseTime)
+          setShowArrow(false);
+          setIsDeleting(true);
+        }, pauseTime);
       } else if (isDeleting && displayText.length > 0) {
-        setDisplayText((prev) => prev.slice(0, -1))
+        setDisplayText((prev) => prev.slice(0, -1));
       } else if (isDeleting && displayText.length === 0) {
-        setIsDeleting(false)
-        setCurrentIndex(0)
+        setIsDeleting(false);
+        setCurrentIndex(0);
       }
-    }, typeSpeed)
+    }, typeSpeed);
 
-    return () => clearTimeout(timeout)
-  }, [currentIndex, displayText, isDeleting, fullText])
+    return () => clearTimeout(timeout);
+  }, [currentIndex, displayText, isDeleting, fullText]);
 
   const workflowSteps = [
     {
@@ -55,52 +65,61 @@ export function Hero() {
       color: "from-cyan-500 to-teal-500",
       description: "Publish to WordPress",
     },
-  ]
+  ];
 
-  const [currentStep, setCurrentStep] = useState(0)
-  const [isAnimating, setIsAnimating] = useState(false)
-  const [scrollProgress, setScrollProgress] = useState(0)
-  const workflowRef = useRef<HTMLDivElement>(null)
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const workflowRef = useRef<HTMLDivElement>(null);
 
   // Scroll-based step selection
   useEffect(() => {
     const handleScroll = () => {
-      if (!workflowRef.current) return
+      if (!workflowRef.current) return;
 
-      const section = workflowRef.current
-      const rect = section.getBoundingClientRect()
-      const sectionHeight = rect.height
-      const sectionTop = rect.top
-      const windowHeight = window.innerHeight
+      const section = workflowRef.current;
+      const rect = section.getBoundingClientRect();
+      const sectionHeight = rect.height;
+      const sectionTop = rect.top;
+      const windowHeight = window.innerHeight;
 
       // Check if section is in viewport
       if (sectionTop <= windowHeight && sectionTop + sectionHeight >= 0) {
         // Calculate scroll progress within the section (0 to 1)
-        const progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (windowHeight + sectionHeight * 0.5)))
-        setScrollProgress(progress)
-        
+        const progress = Math.max(
+          0,
+          Math.min(
+            1,
+            (windowHeight - sectionTop) / (windowHeight + sectionHeight * 0.5)
+          )
+        );
+        setScrollProgress(progress);
+
         // Map scroll progress to step index
-        const stepIndex = Math.floor(progress * workflowSteps.length)
-        const clampedIndex = Math.max(0, Math.min(workflowSteps.length - 1, stepIndex))
-        
+        const stepIndex = Math.floor(progress * workflowSteps.length);
+        const clampedIndex = Math.max(
+          0,
+          Math.min(workflowSteps.length - 1, stepIndex)
+        );
+
         if (clampedIndex !== currentStep) {
-          setIsAnimating(true)
+          setIsAnimating(true);
           setTimeout(() => {
-            setCurrentStep(clampedIndex)
-            setIsAnimating(false)
-          }, 200)
+            setCurrentStep(clampedIndex);
+            setIsAnimating(false);
+          }, 200);
         }
       }
-    }
+    };
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll() // Initial call
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial call
 
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [currentStep])
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [currentStep]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden pt-16">
+    <section className="relative min-h-screen pb-24 sm:pb-28 md:pb-16 flex items-center justify-center px-4 overflow-hidden pt-0">
       {/* Dynamic background with moving gradients */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-black to-cyan-900/20 animate-gradient" />
@@ -120,7 +139,9 @@ export function Hero() {
             {/* Badge */}
             <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/30 backdrop-blur-sm mb-2 md:mb-0">
               <Sparkles className="w-4 h-4 text-blue-400" />
-              <span className="text-sm text-blue-300 font-medium">Your AI Content Posting Agent</span>
+              <span className="text-sm text-blue-300 font-medium">
+                Your AI Content Posting Agent
+              </span>
             </div>
 
             {/* Main heading with typewriter effect */}
@@ -132,7 +153,9 @@ export function Hero() {
                     <span className="animate-pulse">/</span>
                   </span>
                 </h1>
-                {showArrow && <ArrowRight className="w-8 h-8 lg:w-12 lg:h-12 text-blue-400 ml-4 animate-bounce" />}
+                {showArrow && (
+                  <ArrowRight className="w-8 h-8 lg:w-12 lg:h-12 text-blue-400 ml-4 animate-bounce" />
+                )}
               </div>
               <h2 className="text-2xl lg:text-4xl font-light text-gray-300 mb-6 leading-relaxed">
                 <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent font-semibold">
@@ -143,8 +166,9 @@ export function Hero() {
 
             {/* Description */}
             <p className="text-lg lg:text-xl text-gray-400 leading-relaxed max-w-2xl animate-fade-in-up">
-              Let Xcripter take care of the entire content lifecycle—fully automated. From research to publishing, your
-              content strategy runs on autopilot.
+              Let Xcripter take care of the entire content lifecycle—fully
+              automated. From research to publishing, your content strategy runs
+              on autopilot.
             </p>
 
             {/* Key features */}
@@ -160,7 +184,9 @@ export function Hero() {
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <feature.icon className="w-4 h-4 text-blue-400" />
-                  <span className="text-sm text-gray-300 font-medium">{feature.text}</span>
+                  <span className="text-sm text-gray-300 font-medium">
+                    {feature.text}
+                  </span>
                 </div>
               ))}
             </div>
@@ -187,7 +213,10 @@ export function Hero() {
           </div>
 
           {/* Right side - Interactive workflow visualization */}
-          <div ref={workflowRef} className="relative animate-fade-in-right mb-12 lg:mb-0">
+          <div
+            ref={workflowRef}
+            className="relative animate-fade-in-right mb-12 lg:mb-0"
+          >
             {/* Main workflow container */}
             <div className="relative p-8">
               {/* Background glow */}
@@ -205,11 +234,24 @@ export function Hero() {
                           ? "bg-gradient-to-r from-gray-800/80 to-gray-700/60 border border-gray-600/50 scale-105 shadow-2xl"
                           : "bg-gray-900/30 border border-gray-800/50 hover:bg-gray-800/40"
                       }
-                      ${isAnimating && currentStep === index ? "animate-pulse" : ""}
+                      ${
+                        isAnimating && currentStep === index
+                          ? "animate-pulse"
+                          : ""
+                      }
                     `}
                     style={{
-                      transform: `translateY(${currentStep === index ? 0 : (index - currentStep) * 10}px) scale(${currentStep === index ? 1.05 : 1})`,
-                      opacity: currentStep === index ? 1 : 0.7 + (Math.max(0, 1 - Math.abs(index - currentStep) * 0.3))
+                      transform: `translateY(${
+                        currentStep === index ? 0 : (index - currentStep) * 10
+                      }px) scale(${currentStep === index ? 1.05 : 1})`,
+                      opacity:
+                        currentStep === index
+                          ? 1
+                          : 0.7 +
+                            Math.max(
+                              0,
+                              1 - Math.abs(index - currentStep) * 0.3
+                            ),
                     }}
                   >
                     {/* Step icon */}
@@ -249,7 +291,11 @@ export function Hero() {
                       <p
                         className={`
                         text-sm transition-colors duration-300
-                        ${currentStep === index ? "text-gray-300" : "text-gray-500"}
+                        ${
+                          currentStep === index
+                            ? "text-gray-300"
+                            : "text-gray-500"
+                        }
                       `}
                       >
                         {step.description}
@@ -277,11 +323,15 @@ export function Hero() {
             {/* Stats overlay - Touch bottom of Auto Post card */}
             <div className="absolute bottom-[-5.5rem] sm:bottom-[-6rem] md:bottom-[-6.5rem] left-1/2 transform -translate-x-1/2 flex space-x-4 lg:space-x-8 text-center mt-8">
               <div className="px-3 py-2 lg:px-4 lg:py-2 rounded-xl bg-gray-900/80 border border-gray-700/50 backdrop-blur-sm hover:scale-105 transition-transform">
-                <div className="text-base lg:text-lg font-bold text-white">50K+</div>
+                <div className="text-base lg:text-lg font-bold text-white">
+                  50K+
+                </div>
                 <div className="text-xs text-gray-400">Articles</div>
               </div>
               <div className="px-3 py-2 lg:px-4 lg:py-2 rounded-xl bg-gray-900/80 border border-gray-700/50 backdrop-blur-sm hover:scale-105 transition-transform">
-                <div className="text-base lg:text-lg font-bold text-white">99%</div>
+                <div className="text-base lg:text-lg font-bold text-white">
+                  99%
+                </div>
                 <div className="text-xs text-gray-400">SEO Score</div>
               </div>
             </div>
@@ -289,5 +339,5 @@ export function Hero() {
         </div>
       </div>
     </section>
-  )
+  );
 }
