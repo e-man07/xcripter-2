@@ -55,14 +55,18 @@ export function HowItWorks() {
       const windowHeight = window.innerHeight
 
       // Check if section is in viewport
-      if (sectionTop <= windowHeight && sectionTop + sectionHeight >= 0) {
+      if (sectionTop <= windowHeight * 1.2 && sectionTop + sectionHeight >= -windowHeight * 0.2) {
         // Calculate scroll progress within the section (0 to 1)
-        const progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (windowHeight + sectionHeight)))
+        // Use a smaller denominator to make the effect more pronounced
+        const progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (windowHeight * 0.8 + sectionHeight * 0.8)))
         setScrollProgress(progress)
         
-        // Map scroll progress to step index
-        const stepIndex = Math.floor(progress * steps.length)
-        const clampedIndex = Math.max(0, Math.min(steps.length - 1, stepIndex))
+        // Map scroll progress to step index with smoother transition
+        // Use a more precise calculation that gives steps more screen time
+        const stepCount = steps.length
+        const stepProgress = progress * stepCount
+        const stepIndex = Math.floor(stepProgress)
+        const clampedIndex = Math.max(0, Math.min(stepCount - 1, stepIndex))
         
         setActiveStep(clampedIndex)
       }
@@ -96,6 +100,14 @@ export function HowItWorks() {
             />
           </div>
           <p className="text-sm text-gray-500">Scroll to explore each step</p>
+          
+          {/* Fixed position indicator for mobile */}
+          <div className="fixed top-0 left-0 w-full h-1 bg-gray-800 z-50 md:hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-blue-500 to-cyan-500"
+              style={{ width: `${scrollProgress * 100}%` }}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -124,44 +136,44 @@ export function HowItWorks() {
                   }}
                   onClick={() => setActiveStep(index)}
                 >
-                <div
-                  className={`
-                  absolute left-0 top-0 bottom-0 w-1 rounded-r-full transition-all duration-500
-                  ${activeStep === index ? `bg-gradient-to-b ${step.color}` : "bg-transparent"}
-                `}
-                />
-
-                <div className="flex items-start space-x-4">
                   <div
                     className={`
-                    w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300
-                    ${activeStep === index ? `bg-gradient-to-br ${step.color} shadow-lg` : "bg-gray-800"}
-                  `}
-                  >
-                    <step.icon className="w-6 h-6 text-white" />
-                  </div>
-
-                  <div className="flex-1">
-                    <h3
-                      className={`
-                      text-lg font-semibold mb-2 transition-colors duration-300
-                      ${activeStep === index ? "text-white" : "text-gray-300"}
+                      absolute left-0 top-0 bottom-0 w-1 rounded-r-full transition-all duration-500
+                      ${isActive ? `bg-gradient-to-b ${step.color}` : "bg-transparent"}
                     `}
-                    >
-                      {step.title}
-                    </h3>
-                    <p className="text-gray-400 text-sm leading-relaxed">{step.description}</p>
-                  </div>
+                  />
 
-                  <div
-                    className={`
-                    w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300
-                    ${activeStep === index ? `bg-gradient-to-br ${step.color} text-white` : "bg-gray-800 text-gray-500"}
-                  `}
-                  >
-                    {index + 1}
+                  <div className="flex items-start space-x-4">
+                    <div
+                      className={`
+                        w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300
+                        ${isActive ? `bg-gradient-to-br ${step.color} shadow-lg` : "bg-gray-800"}
+                      `}
+                    >
+                      <step.icon className="w-6 h-6 text-white" />
+                    </div>
+
+                    <div className="flex-1">
+                      <h3
+                        className={`
+                          text-lg font-semibold mb-2 transition-colors duration-300
+                          ${isActive ? "text-white" : "text-gray-300"}
+                        `}
+                      >
+                        {step.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">{step.description}</p>
+                    </div>
+
+                    <div
+                      className={`
+                        w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300
+                        ${isActive ? `bg-gradient-to-br ${step.color} text-white` : "bg-gray-800 text-gray-500"}
+                      `}
+                    >
+                      {index + 1}
+                    </div>
                   </div>
-                </div>
                 </div>
               )
             })}
@@ -170,19 +182,16 @@ export function HowItWorks() {
           {/* Active step details */}
           <div className="relative">
             <div 
-              className="p-8 rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-800/60 border border-gray-700/50 backdrop-blur-sm transition-all duration-500"
+              className="p-8 rounded-2xl bg-gray-900/60 border border-gray-800 backdrop-blur-lg transition-all duration-700"
               style={{
-                transform: `translateX(${scrollProgress * 20 - 10}px)`,
-                opacity: 0.8 + (scrollProgress * 0.2)
+                transform: `translateX(${(scrollProgress * 20) - 10}px)`,
+                boxShadow: '0 20px 40px -20px rgba(0, 0, 0, 0.5)'
               }}
             >
-              <div
-                className={`
-                w-20 h-20 rounded-2xl mb-6 flex items-center justify-center
-                bg-gradient-to-br ${steps[activeStep].color} shadow-2xl
-              `}
-              >
-                {React.createElement(steps[activeStep].icon, { className: "w-10 h-10 text-white" })}
+              <div className="inline-block p-3 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 mb-6">
+                <div className={`w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br ${steps[activeStep].color}`}>
+                  {React.createElement(steps[activeStep].icon, { className: "w-6 h-6 text-white" })}
+                </div>
               </div>
 
               <h3 className="text-2xl font-bold mb-4 text-white">{steps[activeStep].title}</h3>

@@ -83,10 +83,11 @@ export function WhatXcripterDoes() {
       const sectionTop = rect.top
       const windowHeight = window.innerHeight
 
-      // Check if section is in viewport
-      if (sectionTop <= windowHeight && sectionTop + sectionHeight >= 0) {
+      // Check if section is in viewport with extended range for smoother transitions
+      if (sectionTop <= windowHeight * 1.2 && sectionTop + sectionHeight >= -windowHeight * 0.2) {
         // Calculate scroll progress within the section (0 to 1)
-        const progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (windowHeight + sectionHeight)))
+        // Use a smaller denominator to make the effect more pronounced
+        const progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (windowHeight * 0.8 + sectionHeight * 0.8)))
         setScrollProgress(progress)
         
         // Find which feature is most visible
@@ -140,6 +141,14 @@ export function WhatXcripterDoes() {
               style={{ width: `${scrollProgress * 100}%` }}
             />
           </div>
+          
+          {/* Fixed position indicator for mobile */}
+          <div className="fixed top-0 left-0 w-full h-1 bg-gray-800 z-50 md:hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-blue-500 to-cyan-500"
+              style={{ width: `${scrollProgress * 100}%` }}
+            />
+          </div>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             What Can Xcripter Do?
           </h2>
@@ -159,9 +168,10 @@ export function WhatXcripterDoes() {
                 ${index % 2 === 1 ? "lg:flex-row-reverse" : ""}
               `}
               style={{
-                transform: `translateY(${activeFeature === index ? 0 : 20}px)`,
-                opacity: activeFeature === index || hoveredIndex === index ? 1 : 0.7,
-                transition: 'all 0.7s ease-out'
+                transform: `translateY(${activeFeature === index ? 0 : 40}px) scale(${activeFeature === index ? 1 : 0.97})`,
+                opacity: activeFeature === index || hoveredIndex === index ? 1 : 0.6,
+                transition: 'all 0.8s ease-out',
+                boxShadow: activeFeature === index ? '0 10px 30px -15px rgba(0, 0, 0, 0.3)' : 'none'
               }}
             >
               {/* Content side */}
@@ -210,8 +220,9 @@ export function WhatXcripterDoes() {
                     transition-all duration-500 group
                   `}
                   style={{
-                    transform: `translateX(${(activeFeature === index ? (index % 2 === 0 ? 10 : -10) : 0)}px)`,
-                    transition: 'all 0.5s ease-out'
+                    transform: `translateX(${(activeFeature === index ? (index % 2 === 0 ? 20 : -20) : 0)}px) translateY(${activeFeature === index ? -10 : 0}px)`,
+                    transition: 'all 0.7s ease-out',
+                    boxShadow: activeFeature === index ? '0 20px 40px -20px rgba(0, 0, 0, 0.5)' : 'none'
                   }}
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}

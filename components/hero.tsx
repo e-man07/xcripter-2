@@ -275,7 +275,7 @@ export function Hero() {
             </div>
 
             {/* Stats overlay - Touch bottom of Auto Post card */}
-            <div className="absolute -bottom-10 sm:-bottom-12 md:-bottom-14 left-1/2 transform -translate-x-1/2 flex space-x-4 lg:space-x-8 text-center mt-8">
+            <div className="absolute bottom-[-5.5rem] sm:bottom-[-6rem] md:bottom-[-6.5rem] left-1/2 transform -translate-x-1/2 flex space-x-4 lg:space-x-8 text-center mt-8">
               <div className="px-3 py-2 lg:px-4 lg:py-2 rounded-xl bg-gray-900/80 border border-gray-700/50 backdrop-blur-sm hover:scale-105 transition-transform">
                 <div className="text-base lg:text-lg font-bold text-white">50K+</div>
                 <div className="text-xs text-gray-400">Articles</div>
