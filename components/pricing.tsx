@@ -101,7 +101,10 @@ export function Pricing() {
           setIsVisible(true)
         }
       },
-      { threshold: 0.3 },
+      { 
+        threshold: 0.1, // Lower threshold for better mobile detection
+        rootMargin: '50px 0px -50px 0px' // Trigger animation slightly before the element is fully visible
+      },
     )
 
     if (sectionRef.current) {

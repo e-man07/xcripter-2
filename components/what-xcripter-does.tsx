@@ -9,36 +9,54 @@ const features = [
     title: "Research Trending Topics",
     description: "AI analyzes trending topics and keywords in your niche automatically",
     gradient: "from-blue-500 to-cyan-500",
+    mockupTitle: "AI Topic Research in Progress",
+    mockupContent: "Analyzing trending keywords in 'AI automation' niche. Found 24/7 high-volume keywords with low competition.",
+    mockupSubtext: "Discovering content opportunities that your competitors are missing.",
   },
   {
     icon: FileText,
     title: "Create SEO-Optimized Articles",
     description: "Generate high-quality, SEO-friendly content that ranks on search engines",
     gradient: "from-indigo-500 to-blue-500",
+    mockupTitle: "SEO Article Generation Complete",
+    mockupContent: "Generated 2,500-word article on 'Best AI Tools for Content Creation' with target keyword density of 1.2%.",
+    mockupSubtext: "Optimized for featured snippets and semantic search ranking.",
   },
   {
     icon: Globe,
     title: "Auto Publish to WordPress & Custom Sites",
     description: "Seamlessly publish to WordPress, custom sites, and multiple platforms",
     gradient: "from-cyan-500 to-teal-500",
+    mockupTitle: "Multi-Platform Publishing Active",
+    mockupContent: "Successfully published to 3 WordPress sites and 2 custom platforms. All meta tags and images optimized.",
+    mockupSubtext: "Content distributed across your entire digital ecosystem automatically.",
   },
   {
     icon: TrendingUp,
     title: "99% Uptime, 90% Accuracy",
     description: "Reliable performance with industry-leading accuracy rates",
     gradient: "from-blue-600 to-indigo-600",
+    mockupTitle: "System Performance Dashboard",
+    mockupContent: "Uptime: 99.7% | Content Accuracy: 94.2% | Articles Generated: 1,247 this month",
+    mockupSubtext: "Consistent, reliable performance you can count on for your business.",
   },
   {
     icon: Zap,
     title: "Works Without Human Input",
     description: "Fully automated content pipeline that runs 24/7 without intervention",
     gradient: "from-teal-500 to-cyan-500",
+    mockupTitle: "Autonomous Content Pipeline",
+    mockupContent: "Running 24/7 automation. Generated 47 articles this week while you slept. Zero manual intervention required.",
+    mockupSubtext: "Your content machine that never stops working for your business.",
   },
   {
     icon: Users,
     title: "Scalable for Agencies & Enterprises",
     description: "Built to handle high-volume content needs for growing businesses",
     gradient: "from-indigo-600 to-blue-600",
+    mockupTitle: "Enterprise Scale Management",
+    mockupContent: "Managing 15 client accounts, 50+ websites, generating 500+ articles monthly across all verticals.",
+    mockupSubtext: "Scale your agency operations without scaling your headaches.",
   },
 ]
 
@@ -138,13 +156,12 @@ export function WhatXcripterDoes() {
 
                     {/* Content lines */}
                     <div className="space-y-2 text-gray-300 text-sm">
-                      <p className="font-semibold">The Future of AI Content Automation</p>
+                      <p className="font-semibold">{feature.mockupTitle}</p>
                       <p className="line-clamp-2">
-                        Discover how Xcripter leverages cutting-edge AI to streamline your content creation, from
-                        initial research to final publication.
+                        {feature.mockupContent}
                       </p>
                       <p className="line-clamp-1">
-                        Generate high-quality articles, blog posts, and marketing copy with unparalleled efficiency.
+                        {feature.mockupSubtext}
                       </p>
                     </div>
 
